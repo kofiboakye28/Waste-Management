@@ -56,7 +56,7 @@ const Education = () => {
   const [translatedText, setTranslatedText] = useState(''); // Translated text
   const [language, setLanguage] = useState('es'); // Target language (default: Spanish)
 
-  const apiKey = 'AIzaSyCYUp4zgr1baPhOJ9IXbQiwKlGOQxZiHHE'; // Google API Key
+  const apiKey = 'GoogleAPIkey'; // Google API Key
 
   const translateText = async () => {
     const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
