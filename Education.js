@@ -2,8 +2,9 @@
  * @file Education.js
  * @description React component for the Education page. Displays educational articles about waste management and provides a link for further learning.
  */
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Education.css";
+import axios from "axios";
 import trophies from "../components/images/trophies.jpg";
 import carseat from "../components/images/car-seat.jpg";
 import recycle from "../components/images/organics-recycling.jpg";
@@ -51,9 +52,44 @@ const articles = [
  * @returns {JSX.Element} The rendered Education component.
  */
 const Education = () => {
+  const [text, setText] = useState(''); // Text to translate
+  const [translatedText, setTranslatedText] = useState(''); // Translated text
+  const [language, setLanguage] = useState('es'); // Target language (default: Spanish)
+
+  const apiKey = 'AIzaSyCYUp4zgr1baPhOJ9IXbQiwKlGOQxZiHHE'; // Replace with your Google API Key
+
+  const translateText = async () => {
+    const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+    try {
+      const response = await axios.post(url, {
+        q: text,
+        target: language,
+      });
+      setTranslatedText(response.data.data.translations[0].translatedText);
+    } catch (error) {
+      console.error('Error translating text:', error);
+    }
+  };
+
   return (
       <div className="education-container">
         <h2>Educate yourself while earning points.</h2>
+        <div className="translation-section">
+        <textarea
+            placeholder="Enter text to translate"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+        ></textarea>
+          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            {/* Add more languages as needed */}
+          </select>
+          <button onClick={translateText}>Translate</button>
+          <h3>Translated Text:</h3>
+          <p>{translatedText}</p>
+        </div>
         <div className="articles-grid">
           {articles.map((article) => (
               <div className="article-card" key={article.id}>
@@ -74,7 +110,9 @@ const Education = () => {
 
 
         </div>
-        <button className="cta-button" onClick={() => window.open("https://wastestream.psu.edu/education-and-awareness/", "_blank")}>Learn More</button>
+        <button className="cta-button"
+                onClick={() => window.open("https://wastestream.psu.edu/education-and-awareness/", "_blank")}>Learn More
+        </button>
 
       </div>
   );
